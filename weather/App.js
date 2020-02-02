@@ -1,16 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React,{ useState } from 'react';
 import {
   View,
-  Text,
-  Switch,
   StyleSheet
 } from 'react-native';
 
@@ -22,6 +12,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Header from './src/components/Header'
+import Image from './src/components/Image'
+
 const App = () => {
   const [switchValue, setSwitchValue] = useState(true)
   toggleSwitch = (value) => {
@@ -29,11 +22,13 @@ const App = () => {
    }
   return (
     <View style={styles.container}>
-      <Text>{switchValue?'Switch is ON':'Switch is OFF'}</Text>
-      <Switch
+      {/* <Text>{switchValue? '12':'24'}</Text> */}
+      {/* <Switch
         style={{marginTop:30}}
         onValueChange = {toggleSwitch}
-        value = {switchValue}/>
+        value = {switchValue}/> */}
+      <Header />
+      <Image />
     </View>
   );  
 }
@@ -41,8 +36,6 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   }
 })
 
