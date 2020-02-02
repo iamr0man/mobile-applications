@@ -1,34 +1,58 @@
-import React,{ useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  Button,
+  PermissionsAndroid
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Geolocation from 'react-native-geolocation-service';
 
-import Header from './src/components/Header'
-import Image from './src/components/Image'
+// import Header from './src/components/Header'
+// import Look from './src/components/Look'
 
 const App = () => {
-  const [switchValue, setSwitchValue] = useState(true)
-  toggleSwitch = (value) => {
-      setSwitchValue(value)
-   }
+
+  // useEffect(() => {
+  //   requestLocationPermission();
+  // }, [])
+
+  async function requestLocationPermission(msg) {
+
+    console.log(msg)
+
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+
+    console.log(granted)
+
+    if(granted){
+      Geolocation.getCurrentPosition(
+        (position) => {
+            console.log(position);
+        },
+        (error) => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+        },
+      );
+    }
+  }
+  
+  // toggleSwitch = (value) => {
+  //   setSwitchValue(value)
+  // }
+
+
   return (
     <View style={styles.container}>
-      {/* <Text>{switchValue? '12':'24'}</Text> */}
-      {/* <Switch
-        style={{marginTop:30}}
-        onValueChange = {toggleSwitch}
-        value = {switchValue}/> */}
-      <Header />
-      <Image />
+      {/* <Header /> */}
+      <Button
+        title="Press me"
+        onPress={() => requestLocationPermission('crypto')}
+      />
+      {/* <Look /> */}
     </View>
   );  
 }

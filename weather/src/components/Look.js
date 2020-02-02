@@ -5,7 +5,7 @@ import {
   Image
 } from 'react-native';
 
-const Image = () => {
+const Look = () => {
   return (
     <View>
       <Image
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Image
+export default Look
