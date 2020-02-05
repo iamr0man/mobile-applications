@@ -67,10 +67,15 @@ import {
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import Geolocation from 'react-native-geolocation-service';
 
+import instance from './src/api/instance'
+
 // import Header from './src/components/Header'
 // import Look from './src/components/Look'
+import Weather from './src/components/Weather'
 
 const App = () => {
+
+  const [weather, setWeather] = useState([])
 
   // useEffect(() => {
   //   requestLocationPermission();
@@ -85,20 +90,23 @@ const App = () => {
     if(granted){
       RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
       .then(data => {
-        alert(data);
+        if(data !== 'already-enabled'){
+          alert(data);
+        }
       }).catch(err => {
         alert("Error " + err.message + ", Code : " + err.code);
       });
       
-      Geolocation.getCurrentPosition(
-        (position) => {
-            console.log(position);
+      Geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude} = position.coords;
+          instance.get(`/forecast?lat=${latitude}&lon=${longitude}&APPID=51720aa0345184980178f697081d8bd8&units=metric`)
+            .then(response => setWeather(JSON.stringify(response.data.list)))
+          console.log(weather)
         },
         (error) => {
-            // See error code charts below.
             console.log(error.code, error.message);
         },
-        {enableHighAccuracy: true, timeout: 3000}
+        {enableHighAccuracy: true}
       );
     }
   }
@@ -108,9 +116,15 @@ const App = () => {
       {/* <Header /> */}
       <Button
         title="Press me"
+        style={{ flex: 2}}
         onPress={() => requestLocationPermission('crypto')}
       />
+      {/* <Button
+        title="Press me"
+        onPress={() => console.log(weather)}
+      /> */}
       {/* <Look /> */}
+      <Weather weather={weather}/>
     </View>
   );  
 }

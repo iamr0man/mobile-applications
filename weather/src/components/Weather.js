@@ -5,7 +5,11 @@ import {
   Text,
 } from 'react-native';
 
-const Weather = () => {
+const Weather = ({ weather }) => {
+
+  const four = weather.slice(1, 4);
+  console.log(four)
+
   return (
     <View>
         <Text>Testing...</Text>
