@@ -7,7 +7,7 @@ import {
 
 const Look = () => {
   return (
-    <View>
+    <View style={styles.main}>
       <Image
         source={require('../../assets/images/look.jpg')}
         style={styles.container}
@@ -17,8 +17,10 @@ const Look = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
     flex: 8,
+    // width: 300,
+    // height: 600
   }
 })
 

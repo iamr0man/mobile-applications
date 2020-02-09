@@ -70,61 +70,47 @@ import Geolocation from 'react-native-geolocation-service';
 import instance from './src/api/instance'
 
 // import Header from './src/components/Header'
-// import Look from './src/components/Look'
+import Look from './src/components/Look'
 import Weather from './src/components/Weather'
 
 const App = () => {
 
-  const [weather, setWeather] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [weather, setWeather] = useState('[]')
 
-  // useEffect(() => {
-  //   requestLocationPermission();
-  // }, [])
+  useEffect(() => {
+    async function wrapperRequestLocationPermission() {
+      await requestLocationPermission();
+      setLoading(false)      
+    }
+    wrapperRequestLocationPermission();
+  }, [])
 
-  async function requestLocationPermission(msg) {
+  async function requestLocationPermission() {
 
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
 
     if(granted){
-      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-      .then(data => {
-        if(data !== 'already-enabled'){
-          alert(data);
-        }
-      }).catch(err => {
-        alert("Error " + err.message + ", Code : " + err.code);
-      });
-      
       Geolocation.getCurrentPosition((position) => {
           const { latitude, longitude} = position.coords;
           instance.get(`/forecast?lat=${latitude}&lon=${longitude}&APPID=51720aa0345184980178f697081d8bd8&units=metric`)
             .then(response => setWeather(JSON.stringify(response.data.list)))
-          console.log(weather)
         },
         (error) => {
             console.log(error.code, error.message);
         },
-        {enableHighAccuracy: true}
       );
     }
   }
 
   return (
     <View style={styles.container}>
-      {/* <Header /> */}
-      <Button
-        title="Press me"
-        style={{ flex: 2}}
-        onPress={() => requestLocationPermission('crypto')}
-      />
-      {/* <Button
-        title="Press me"
-        onPress={() => console.log(weather)}
-      /> */}
-      {/* <Look /> */}
-      <Weather weather={weather}/>
+      <Weather
+        loading={loading}
+        weather={weather}/>
+      <Look />
     </View>
   );  
 }
