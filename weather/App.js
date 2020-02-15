@@ -101,7 +101,7 @@ const App = () => {
         (error) => {
             console.log(error.code, error.message);
         },
-      );
+      ); 
     }
   }
 
