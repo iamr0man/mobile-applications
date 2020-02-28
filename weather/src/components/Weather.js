@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   Text,
-  Button,
+  Image,
 } from 'react-native';
 
 import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
@@ -16,33 +16,14 @@ const Weather = ({ weather, loading }) => {
   let currenyWeather = JSON.parse(weather).slice(0, 4)
   console.log(currenyWeather)
 
-  function writeInDb() {
-    const stitchAppClient = Stitch.defaultAppClient;
-    const mongoClient = stitchAppClient.getServiceClient(
-      RemoteMongoClient.factory,
-      "mongodb-atlas"
-    );
-    const db = mongoClient.db("weatherapp");
-    const photos = db.collection("photos")
-    // photos.find().asArray().then(data => console.log(data)).catch(err => console.error(err))
-    photos.insertOne({
-      description: "need to translate english text",
-      link: "https://unsplash.com/photos/sHRIto0UraI"
-    })
-  }  
-
   return (
       <View style={styles.container}>
         {currenyWeather.map((v, i) => {
           return (
             <View style={styles.square} key={i}>
-              <Text>{v.dt_txt.match(/\d+:\d+/)[0]}</Text>
-              {/* <CustomIcon name="c3_r2_st" /> */}
-              <Text>{v.main.temp.toFixed(1)}</Text>
-              <Button
-                title="Write in DB"
-                onPress={() => writeInDb()}
-              />
+              <Text style={styles.content}>{v.dt_txt.match(/\d+:\d+/)[0]}</Text>
+              <Image style={styles.icon} source={{uri:"http://openweathermap.org/img/wn/04d@2x.png"}} />
+              <Text style={styles.content}>{v.main.temp.toFixed(1) + ''}</Text>
             </View>
           )
         })}
@@ -55,12 +36,25 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row',
   },
+  icon: {
+    width: 40,
+    height: 50
+  },
   content: {
-    padding: 10,
+    fontSize: 17,
   },  
   square: {
     flex: 1,
+    height: 120,
+    padding: 10,
     backgroundColor: 'powderblue',
+    borderColor: 'black',
+    borderLeftWidth: 4,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderRightWidth: 4,
+    borderBottomWidth: 8,
+    borderRadius: 4
   }
 })
 
