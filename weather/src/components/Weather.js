@@ -6,12 +6,7 @@ import {
   Image,
 } from 'react-native';
 
-import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
-
-
-const Weather = ({ weather, loading }) => {
-
-  if (loading) return null;
+const Weather = ({ weather }) => {
 
   let currenyWeather = JSON.parse(weather).slice(0, 4)
   console.log(currenyWeather)
@@ -22,7 +17,7 @@ const Weather = ({ weather, loading }) => {
           return (
             <View style={styles.square} key={i}>
               <Text style={styles.content}>{v.dt_txt.match(/\d+:\d+/)[0]}</Text>
-              <Image style={styles.icon} source={{uri:"http://openweathermap.org/img/wn/04d@2x.png"}} />
+              <Image style={styles.icon} source={{uri:`http://openweathermap.org/img/wn/${v.weather[0].icon}@2x.png`}} />
               <Text style={styles.content}>{v.main.temp.toFixed(1) + ''}</Text>
             </View>
           )
