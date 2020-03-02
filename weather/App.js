@@ -14,6 +14,7 @@ import instance from './src/api/instance'
 
 import Look from './src/components/Look'
 import Weather from './src/components/Weather'
+import Form from './src/components/Form'
 
 const App = () => {
 
@@ -24,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     async function wrapperRequestLocationPermission() {
-      // _loadClient();
+      _loadClient();
       await requestLocationPermission();
       setLoading(false);
     }
@@ -33,13 +34,13 @@ const App = () => {
 
   function _loadClient() {
     Stitch.initializeDefaultAppClient("weatherapp-xsodn").then(client => {
-      // setClient(client);
+      setClient(client);
       client.auth
         .loginWithCredential(new AnonymousCredential())
         .then(user => {
           console.log(`Successfully logged in as user ${user.id}`);
-          // setCurrentUserId(user.id);
-          // setCurrentUserId(client.auth.user.id);
+          setCurrentUserId(user.id);
+          setCurrentUserId(client.auth.user.id);
       }).catch(err => {
           console.error(err)
       })
@@ -66,7 +67,6 @@ const App = () => {
           const { latitude, longitude} = position.coords;
           instance.get(`/forecast?lat=${latitude}&lon=${longitude}&APPID=51720aa0345184980178f697081d8bd8&units=metric`)
             .then(response => setWeather(JSON.stringify(response.data.list)))
-            console.log(weather)
         },
         (error) => {
             console.log(error.code, error.message);
@@ -79,10 +79,14 @@ const App = () => {
   return !loading ? 
     (
     <View style={styles.container}>
-      <Weather
+      <Form currentUserId={currentUserId} />
+      {/* <Weather
         loading={loading}
         weather={weather} />
-      <Look weather={weather} />
+      <Look 
+        client={client}
+        currentUserId={currentUserId}
+        weather={weather} /> */}
     </View>
   ) : null
 }
