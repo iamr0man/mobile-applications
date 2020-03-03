@@ -10,7 +10,7 @@ import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 
 const Form = ({ currentUserId }) => {
 
-  const [id, setId] = React.useState("0");
+  const [weather, setWeather] = React.useState("0");
   const [link, setLink] = React.useState('');
   const [season, setSeason] = React.useState('spring');
 
@@ -21,13 +21,10 @@ const Form = ({ currentUserId }) => {
     ? Stitch.getAppClient(APP_ID)
     : Stitch.initializeAppClient(APP_ID);
 
-    console.log("stitchApp: " + stitchApp)
-    console.log("currentUserId: " + currentUserId)
-
     const db = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas").db("weatherapp")
     
     db.collection("photos")
-      .insertOne({ owner_id: currentUserId, id, link, season})
+      .insertOne({ owner_id: currentUserId, weather, link, season})
       .then(() => db.collection('photos').find().asArray()
       .then(docs => console.log(docs))
       .catch(err => console.error(err)))
@@ -37,8 +34,8 @@ const Form = ({ currentUserId }) => {
       <View style={styles.container}>
         <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}
-            onChangeText={text => setId(text)}
-            value={id}
+            onChangeText={text => setWeather(text)}
+            value={weather}
         />
         <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}

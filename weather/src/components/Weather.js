@@ -1,4 +1,4 @@
-import React, { useState, Fragment} from 'react';
+import React, { useState, } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,8 +9,6 @@ import {
 const Weather = ({ weather }) => {
 
   let currenyWeather = JSON.parse(weather).slice(0, 4)
-  console.log(currenyWeather)
-
   return (
       <View style={styles.container}>
         {currenyWeather.map((v, i) => {
