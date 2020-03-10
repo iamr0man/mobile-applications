@@ -11,7 +11,7 @@ import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 const Form = ({ currentUserId }) => {
 
   const [weather, setWeather] = React.useState("0");
-  const [link, setLink] = React.useState('');
+  const [link, setLink] = React.useState('link to cloudinary');
   const [season, setSeason] = React.useState('spring');
 
   async function writeLookToDB(){
@@ -22,7 +22,7 @@ const Form = ({ currentUserId }) => {
     : Stitch.initializeAppClient(APP_ID);
 
     const db = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas").db("weatherapp")
-    
+
     db.collection("photos")
       .insertOne({ owner_id: currentUserId, weather, link, season})
       .then(() => db.collection('photos').find().asArray()

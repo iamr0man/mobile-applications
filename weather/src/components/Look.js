@@ -3,22 +3,24 @@ import {
   View,
   StyleSheet,
   Image,
-  Dimensions
 } from 'react-native';
 
 import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 
-const Look = ({ weather,  currentUserId, client }) => {
+const Look = ({ weather, loading }) => {
 
-  const [lookUri, setLookUri] = useState('')
+  const [currentPhoto, setCurrentLook] = useState('')
+  const [tempLooks, setTempLooks] = useState([])
+  const [currentWeather, setCurrentWeather] = useState([])
 
   useEffect(() => {
     async function wrapperGetLook(){
+      setCurrentWeather(parseInt(JSON.parse(weather)[0].main.temp))
       await getLook()
     }
     wrapperGetLook()
   }, [])
-
+  
   const APP_ID = "weatherapp-xsodn"
 
   async function getLook(){
@@ -26,38 +28,25 @@ const Look = ({ weather,  currentUserId, client }) => {
     ? Stitch.getAppClient(APP_ID)
     : Stitch.initializeAppClient(APP_ID);
 
-    console.log("currentUserId: " + currentUserId)
-
     const db = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas").db("weatherapp")
     
     db.collection("photos").find().asArray()
-      .then(docs => console.log(docs))
-      .catch(err => console.error(err))
-
-  // photos.find().then(doc => console.log(doc)).catch(err => console.error(err))
-  //   let query = {};
-  //   console.log(weather)
-  //   if(currentWeather[0].main.temp.toFixed(1) < 7){
-  //     query = { id: 9}
-  //   }
-
-  //   photos.findOne(query).then(result => {
-  //       if(result) {
-  //         console.log(result)
-  //       } else {
-  //         console.log('No document matches the provided query.')
-  //       }
-  //     })
-  //     .catch(err => console.error(`Failed to find document: ${err}`))
+      .then(docs => {
+        setTempLooks(docs.filter(v => v.weather.match(currentWeather)))
+        setCurrentLook(tempLooks[0].link)
+      })
+      .catch(err => console.error(`Failed to find document: ${err}`))
   }
 
-  return (
+  return (!loading ? 
+    (
     <View style={styles.main}>
       <Image
-        source={require('../../assets/images/winter.jpg')}
-        style={styles.look}
+        source={currentPhoto ? {uri: currentPhoto } : require('../../assets/images/loader.png')}
+        style={currentPhoto ? styles.look : styles.preload}
       />  
     </View>
+    ) : null
   );  
 }
 
@@ -68,6 +57,9 @@ const styles = StyleSheet.create({
   look: {
     width: '100%',
     height: '100%'
+  },
+  preload: {
+    width: '24px'
   }
 })
 

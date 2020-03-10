@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -8,15 +8,15 @@ import {
 
 const Weather = ({ weather }) => {
 
-  let currenyWeather = JSON.parse(weather).slice(0, 4)
+  let currentWeather = JSON.parse(weather).slice(0, 4)
   return (
       <View style={styles.container}>
-        {currenyWeather.map((v, i) => {
+        {currentWeather.map((v, i) => {
           return (
             <View style={styles.square} key={i}>
               <Text style={styles.content}>{v.dt_txt.match(/\d+:\d+/)[0]}</Text>
               <Image style={styles.icon} source={{uri:`http://openweathermap.org/img/wn/${v.weather[0].icon}@2x.png`}} />
-              <Text style={styles.content}>{v.main.temp.toFixed(1) + ''}</Text>
+              <Text style={styles.content}>{v.main.temp.toFixed(1)}</Text>
             </View>
           )
         })}

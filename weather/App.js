@@ -82,11 +82,9 @@ const App = () => {
     <View style={styles.container}>
       {/* <Form currentUserId={currentUserId} /> */}
       <Weather
-        loading={loading}
         weather={weather} />
-      <Look 
-        client={client}
-        currentUserId={currentUserId}
+      <Look
+        loading={loading}
         weather={weather} />
     </View>
   ) : <Image 
