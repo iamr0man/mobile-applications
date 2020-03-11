@@ -27,7 +27,7 @@ const App = () => {
   useEffect(() => {
     MainService.load(v => setLoading(false))
     async function wrapperRequestLocationPermission() {
-      // _loadClient();
+      _loadClient();
       await requestLocationPermission();
     }
     wrapperRequestLocationPermission();
@@ -67,7 +67,9 @@ const App = () => {
       Geolocation.getCurrentPosition((position) => {
           const { latitude, longitude} = position.coords;
           instance.get(`/forecast?lat=${latitude}&lon=${longitude}&APPID=51720aa0345184980178f697081d8bd8&units=metric`)
-            .then(response => setWeather(JSON.stringify(response.data.list)))
+            .then(response => {
+              setWeather(JSON.stringify(response.data.list)) 
+            })
         },
         (error) => {
             console.log(error.code, error.message);
@@ -84,7 +86,6 @@ const App = () => {
       <Weather
         weather={weather} />
       <Look
-        loading={loading}
         weather={weather} />
     </View>
   ) : <Image 

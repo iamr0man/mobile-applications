@@ -3,22 +3,21 @@ import {
   View,
   StyleSheet,
   Image,
+  TouchableOpacity,
+  Text
 } from 'react-native';
 
 import { Stitch, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 
-const Look = ({ weather, loading }) => {
+const Look = ({ weather }) => {
 
-  const [currentPhoto, setCurrentLook] = useState('')
+  const [numberLook, setNumberLook] = useState('')
   const [tempLooks, setTempLooks] = useState([])
   const [currentWeather, setCurrentWeather] = useState([])
 
   useEffect(() => {
-    async function wrapperGetLook(){
-      setCurrentWeather(parseInt(JSON.parse(weather)[0].main.temp))
-      await getLook()
-    }
-    wrapperGetLook()
+    setCurrentWeather('7')
+    getLook()
   }, [])
   
   const APP_ID = "weatherapp-xsodn"
@@ -32,34 +31,54 @@ const Look = ({ weather, loading }) => {
     
     db.collection("photos").find().asArray()
       .then(docs => {
+        console.log(docs.filter(v => v.weather))
+        console.log(currentWeather)
         setTempLooks(docs.filter(v => v.weather.match(currentWeather)))
-        setCurrentLook(tempLooks[0].link)
+        setNumberLook('0')
       })
       .catch(err => console.error(`Failed to find document: ${err}`))
   }
 
-  return (!loading ? 
-    (
-    <View style={styles.main}>
+  function changeLook(){
+    // console.log(numberLook)
+    // console.log(tempLooks[numberLook])
+    // return numberLook < tempLooks.length ? setNumberLook(+numberLook+1) : setNumberLook('0')
+    if(numberLook < tempLooks.length){
+      console.log('if - ' + tempLooks[numberLook])
+      setNumberLook((Number(numberLook)+1).toString())
+    } else {
+      console.log('else - ' + tempLooks[numberLook])
+      setNumberLook('0')
+    }
+  }
+
+  function selectLook(){
+    return tempLooks[numberLook] ? {uri: tempLooks[numberLook].link } : require('../../assets/images/loader.png')
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={.5} style={styles.main} onPress={changeLook}>
       <Image
-        source={currentPhoto ? {uri: currentPhoto } : require('../../assets/images/loader.png')}
-        style={currentPhoto ? styles.look : styles.preload}
+        source={selectLook()}
+        style={numberLook ? styles.look : styles.preload}
       />  
-    </View>
-    ) : null
+    </TouchableOpacity>
   );  
 }
 
 const styles = StyleSheet.create({
   main: {
     flex: 11,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   look: {
     width: '100%',
     height: '100%'
   },
   preload: {
-    width: '24px'
+    width: 10,
+    height: 10,
   }
 })
 
