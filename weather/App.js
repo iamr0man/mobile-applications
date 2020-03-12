@@ -65,7 +65,7 @@ const App = () => {
       });
 
       Geolocation.getCurrentPosition((position) => {
-          const { latitude, longitude} = position.coords;
+          let { latitude, longitude} = { latitude: 50.523333, longitude: 30.156666};
           instance.get(`/forecast?lat=${latitude}&lon=${longitude}&APPID=51720aa0345184980178f697081d8bd8&units=metric`)
             .then(response => {
               setWeather(JSON.stringify(response.data.list)) 

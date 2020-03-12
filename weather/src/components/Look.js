@@ -31,28 +31,18 @@ const Look = ({ weather }) => {
     
     db.collection("photos").find().asArray()
       .then(docs => {
-        console.log(docs.filter(v => v.weather))
-        console.log(currentWeather)
-        setTempLooks(docs.filter(v => v.weather.match(currentWeather)))
+        setTempLooks(docs.filter(v => v.weather.match(currentWeather.toString())))
         setNumberLook('0')
       })
       .catch(err => console.error(`Failed to find document: ${err}`))
   }
 
   function changeLook(){
-    // console.log(numberLook)
-    // console.log(tempLooks[numberLook])
-    // return numberLook < tempLooks.length ? setNumberLook(+numberLook+1) : setNumberLook('0')
-    if(numberLook < tempLooks.length){
-      console.log('if - ' + tempLooks[numberLook])
-      setNumberLook((Number(numberLook)+1).toString())
-    } else {
-      console.log('else - ' + tempLooks[numberLook])
-      setNumberLook('0')
-    }
+    +numberLook+1 < tempLooks.length ? setNumberLook((+numberLook+1).toString()) : setNumberLook('0')
   }
 
   function selectLook(){
+    console.log(numberLook)
     return tempLooks[numberLook] ? {uri: tempLooks[numberLook].link } : require('../../assets/images/loader.png')
   }
 
