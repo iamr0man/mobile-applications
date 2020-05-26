@@ -16,7 +16,7 @@ const Look = ({ weather }) => {
   const [currentWeather, setCurrentWeather] = useState([])
 
   useEffect(() => {
-    setCurrentWeather('7')
+    setCurrentWeather(weather[0].main.feels_like)
     getLook()
   }, [])
   
@@ -28,7 +28,7 @@ const Look = ({ weather }) => {
     : Stitch.initializeAppClient(APP_ID);
 
     const db = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas").db("weatherapp")
-    
+
     db.collection("photos").find().asArray()
       .then(docs => {
         setTempLooks(docs.filter(v => v.weather.match(currentWeather.toString())))
@@ -42,7 +42,6 @@ const Look = ({ weather }) => {
   }
 
   function selectLook(){
-    console.log(numberLook)
     return tempLooks[numberLook] ? {uri: tempLooks[numberLook].link } : require('../../assets/images/loader.png')
   }
 

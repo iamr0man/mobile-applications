@@ -8,7 +8,7 @@ import {
 
 const Weather = ({ weather }) => {
 
-  let currentWeather = JSON.parse(weather).slice(0, 4)
+  let currentWeather = weather.slice(0, 4)
   return (
       <View style={styles.container}>
         {currentWeather.map((v, i) => {
